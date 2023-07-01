@@ -1,30 +1,30 @@
-const bookForm = document.querySelector("#book-form");
-const titleInput = document.querySelector("#title");
-const authorInput = document.querySelector("#author");
-const isbnInput = document.querySelector("#isbn");
-const bookList = document.querySelector("#book-list");
+const bookForm = document.querySelector('#book-form');
+const titleInput = document.querySelector('#title');
+const authorInput = document.querySelector('#author');
+const isbnInput = document.querySelector('#isbn');
+const bookList = document.querySelector('#book-list');
 
 let books = [];
 
-bookForm.addEventListener("submit", addBook);
-bookList.addEventListener("click", handleBookListClick);
+bookForm.addEventListener('submit', addBook);
+bookList.addEventListener('click', handleBookListClick);
 
 function addBook(e) {
   e.preventDefault();
-
+  // Defining the title, author, and isbn variables
   const title = titleInput.value.trim();
   const author = authorInput.value.trim();
   const isbn = isbnInput.value.trim();
 
-  if (title === "" || author === "" || isbn === "") {
-    displayNotification("Please enter all fields", "danger");
+  if (title === '' || author === '' || isbn === '') {
+    displayNotification('Please enter all fields', 'danger');
     return;
   }
 
   const newBook = {
     title,
     author,
-    isbn
+    isbn,
   };
 
   books.push(newBook);
@@ -33,46 +33,46 @@ function addBook(e) {
 
   saveBooksToStorage();
 
-  displayNotification("Book added successfully", "success");
+  displayNotification('Book added successfully', 'success');
 
   bookForm.reset();
 }
 
 function renderBook(book) {
-  const row = document.createElement("tr");
+  const row = document.createElement('tr');
 
-  const titleCell = document.createElement("td");
+  const titleCell = document.createElement('td');
   titleCell.textContent = book.title;
   row.appendChild(titleCell);
 
-  const authorCell = document.createElement("td");
+  const authorCell = document.createElement('td');
   authorCell.textContent = book.author;
   row.appendChild(authorCell);
 
-  const isbnCell = document.createElement("td");
+  const isbnCell = document.createElement('td');
   isbnCell.textContent = book.isbn;
   row.appendChild(isbnCell);
 
-  const actionCell = document.createElement("td");
+  const actionCell = document.createElement('td');
 
-  const editButton = document.createElement("button");
-  editButton.classList.add("btn", "btn-primary", "btn-sm", "me-1");
-  editButton.textContent = "Edit";
+  const editButton = document.createElement('button');
+  editButton.classList.add('btn', 'btn-primary', 'btn-sm', 'me-1');
+  editButton.textContent = 'Edit';
   actionCell.appendChild(editButton);
 
-  const saveButton = document.createElement("button");
-  saveButton.classList.add("btn", "btn-success", "btn-sm");
-  saveButton.textContent = "Save";
-  saveButton.style.display = "none";
+  const saveButton = document.createElement('button');
+  saveButton.classList.add('btn', 'btn-success', 'btn-sm');
+  saveButton.textContent = 'Save';
+  saveButton.style.display = 'none';
   actionCell.appendChild(saveButton);
 
-  const deleteButton = document.createElement("button");
-  deleteButton.classList.add("btn", "btn-danger", "btn-sm");
-  deleteButton.textContent = "Delete";
+  const deleteButton = document.createElement('button');
+  deleteButton.classList.add('btn', 'btn-danger', 'btn-sm');
+  deleteButton.textContent = 'Delete';
   actionCell.appendChild(deleteButton);
 
   row.appendChild(actionCell);
-  row.setAttribute('data-title', book.title.toLowerCase())
+  row.setAttribute('data-title', book.title.toLowerCase());
 
   bookList.appendChild(row);
 }
@@ -80,52 +80,52 @@ function renderBook(book) {
 function handleBookListClick(e) {
   const target = e.target;
 
-  if (target.classList.contains("btn-primary")) {
+  if (target.classList.contains('btn-primary')) {
     handleEditClick(target);
-  } else if (target.classList.contains("btn-success")) {
+  } else if (target.classList.contains('btn-success')) {
     handleSaveClick(target);
-  } else if (target.classList.contains("btn-danger")) {
+  } else if (target.classList.contains('btn-danger')) {
     handleDeleteClick(target);
   }
 }
 
 function handleEditClick(button) {
-  const row = button.closest("tr");
-  const titleCell = row.querySelector("td:first-child");
-  const authorCell = row.querySelector("td:nth-child(2)");
+  const row = button.closest('tr');
+  const titleCell = row.querySelector('td:first-child');
+  const authorCell = row.querySelector('td:nth-child(2)');
 
   titleCell.contentEditable = true;
   authorCell.contentEditable = true;
-  titleCell.classList.add("editable", "edit-mode");
-  authorCell.classList.add("editable", "edit-mode");
+  titleCell.classList.add('editable', 'edit-mode');
+  authorCell.classList.add('editable', 'edit-mode');
 
-  button.style.display = "none";
+  button.style.display = 'none';
   const saveButton = button.nextElementSibling;
-  saveButton.style.display = "inline-block";
+  saveButton.style.display = 'inline-block';
 }
 
 function handleSaveClick(button) {
-  const row = button.closest("tr");
-  const titleCell = row.querySelector("td:first-child");
-  const authorCell = row.querySelector("td:nth-child(2)");
+  const row = button.closest('tr');
+  const titleCell = row.querySelector('td:first-child');
+  const authorCell = row.querySelector('td:nth-child(2)');
 
   titleCell.contentEditable = false;
   authorCell.contentEditable = false;
-  titleCell.classList.remove("editable", "edit-mode");
-  authorCell.classList.remove("editable", "edit-mode");
+  titleCell.classList.remove('editable', 'edit-mode');
+  authorCell.classList.remove('editable', 'edit-mode');
 
-  button.style.display = "none";
+  button.style.display = 'none';
   const editButton = button.previousElementSibling;
-  editButton.style.display = "inline-block";
+  editButton.style.display = 'inline-block';
 
   const title = titleCell.textContent.trim();
   const author = authorCell.textContent.trim();
-  const isbn = row.querySelector("td:nth-child(3)").textContent.trim();
+  const isbn = row.querySelector('td:nth-child(3)').textContent.trim();
 
   const updatedBook = {
     title,
     author,
-    isbn
+    isbn,
   };
 
   const bookIndex = books.findIndex((book) => book.isbn === isbn);
@@ -133,12 +133,12 @@ function handleSaveClick(button) {
 
   saveBooksToStorage();
 
-  displayNotification("Book updated successfully", "warning");
+  displayNotification('Book updated successfully', 'warning');
 }
 
 function handleDeleteClick(button) {
-  const row = button.closest("tr");
-  const isbn = row.querySelector("td:nth-child(3)").textContent.trim();
+  const row = button.closest('tr');
+  const isbn = row.querySelector('td:nth-child(3)').textContent.trim();
 
   const bookIndex = books.findIndex((book) => book.isbn === isbn);
   books.splice(bookIndex, 1);
@@ -147,15 +147,15 @@ function handleDeleteClick(button) {
 
   saveBooksToStorage();
 
-  displayNotification("Book removed successfully", "danger");
+  displayNotification('Book removed successfully', 'danger');
 }
 
 function displayNotification(message, type) {
-  const notification = document.createElement("div");
-  notification.classList.add("alert", `alert-${type}`);
+  const notification = document.createElement('div');
+  notification.classList.add('alert', `alert-${type}`);
   notification.textContent = message;
 
-  const container = document.querySelector(".container");
+  const container = document.querySelector('.container');
   container.insertBefore(notification, bookForm);
 
   setTimeout(() => {
@@ -164,11 +164,11 @@ function displayNotification(message, type) {
 }
 
 function saveBooksToStorage() {
-  localStorage.setItem("books", JSON.stringify(books));
+  localStorage.setItem('books', JSON.stringify(books));
 }
 
 function retrieveBooksFromStorage() {
-  const storedBooks = localStorage.getItem("books");
+  const storedBooks = localStorage.getItem('books');
   if (storedBooks) {
     books = JSON.parse(storedBooks);
     books.forEach(renderBook);
